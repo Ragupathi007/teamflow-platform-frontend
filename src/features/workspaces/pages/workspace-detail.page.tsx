@@ -23,9 +23,11 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { useCurrentUser } from '@/features/auth/auth.hooks'
 import { toApiError } from '@/lib/api-error'
 import { WorkspaceDeleteDialog } from '../components/workspace-delete-dialog'
 import { WorkspaceFormDialog } from '../components/workspace-form-dialog'
+import { WorkspaceMembersCard } from '../components/workspace-members-card'
 import { WorkspaceRoleBadge } from '../components/workspace-role-badge'
 import { useWorkspace, useWorkspaces } from '../workspaces.hooks'
 
@@ -51,6 +53,7 @@ export function WorkspaceDetailPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>()
   const workspaceQuery = useWorkspace(workspaceId)
   const workspacesQuery = useWorkspaces()
+  const { data: currentUser } = useCurrentUser()
   const navigate = useNavigate()
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -195,6 +198,14 @@ export function WorkspaceDetailPage() {
             </DetailRow>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-6">
+        <WorkspaceMembersCard
+          workspaceId={workspace.id}
+          currentUserRole={role}
+          currentUserId={currentUser?.id}
+        />
       </div>
 
       <WorkspaceFormDialog
